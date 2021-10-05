@@ -15,7 +15,7 @@ const InfiniteScroll = ({ fetchNextPage, getNextStatus, children }) => {
   useIntersectionObserver({
     target: targetRef,
     onIntersect: onIntersect,
-    enabled: getNextStatus(page),
+    enabled: getNextStatus?.(page),
   });
 
   return (

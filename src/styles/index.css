@@ -7,18 +7,46 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.App {
-  min-width: 100vw;
-  position: absolute;
+:root {
+  --primary-color: #5357c5;
+  --secondary-color: #9ca0ff;
+  --gray-color: #e2e2e2;
+  --text-primary: rgba(0, 0, 0, 0.8);
+  --text-secondary: rgba(0, 0, 0, 0.6);
+  --text-tertiary: rgba(0, 0, 0, 0.4);
+  --background-primary: #ffffff;
+  --background-secondary: #f8f8f8;
+  --background-tertiary: #f2f2f2;
+  --ornament: #e2e2e2;
+  --card: #ffffff;
+
+  --box-shadow: 0px 4px 43px rgba(0, 0, 0, 0.08),
+    0px 0.893452px 9.60461px rgba(0, 0, 0, 0.043507),
+    0px 0.266004px 2.85954px rgba(0, 0, 0, 0.0255515);
+  --button-shadow: 0px 9px 53px rgba(83, 87, 197, 0.41),
+    0px 2.01027px 11.8382px rgba(83, 87, 197, 0.244404),
+    0px 0.598509px 3.52455px rgba(83, 87, 197, 0.165596);
+
+  --button-shadow-hover: 0px 9px 53px rgba(83, 87, 197, 0.81),
+    0px 2.01027px 11.8382px rgba(83, 87, 197, 0.244404),
+    0px 0.598509px 3.52455px rgba(83, 87, 197, 0.165596);
+  --footer: #404040;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.App {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .d-flex {
   display: flex;
+}
+
+.center {
+  align-items: center;
+  justify-content: center;
 }
 
 .backdrop {
@@ -44,4 +72,54 @@ code {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+input {
+  flex: 1 1;
+  font-style: normal;
+  font-size: 16px;
+  padding-right: 48px;
+  line-height: 24px;
+  color: var(--text-primary);
+  background: transparent;
+  border: 0px;
+  padding: 12px 16px;
+  background: var(--background-tertiary);
+  border-radius: 4px;
+  border: 0px;
+  display: flex;
+  width: 100%;
+  max-width: 367px;
+  position: relative;
+}
+
+input::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: var(--text-primary);
+  opacity: 0.8; /* Firefox */
+}
+
+button {
+  background: var(--primary-color);
+  box-shadow: var(--button-shadow);
+  padding: 12px 16px;
+  border-radius: 4px;
+  border: 0;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: #f8f8f8;
+  font-weight: bold;
+  text-align: center;
+}
+button:hover {
+  box-shadow: var(--button-shadow-hover);
+}
+
+.container {
+  max-width: 1024px;
+  width: 100vw;
+  padding: 24px;
 }

@@ -4,9 +4,9 @@ import { FILM_DATA } from './../redux/reducer/filmReducer';
 import filmApi from '../api/film';
 import './../../src/styles/App.css';
 import Modal from '../components/Modal';
-import InfiniteScroll from '../components/InifiniteScroll';
+import InfiniteScroll from '../components/InfiniteScroll';
 
-function App({ film, dispatch }) {
+export function App({ film, dispatch }) {
   const { filmData } = film ?? {};
 
   // We dont need to pass keyword into redux,
@@ -32,57 +32,98 @@ function App({ film, dispatch }) {
   };
   return (
     <div className='App'>
-      <div className='d-flex'>
-        <input onChange={(e) => setKeyword(e.target.value)}></input>
-        <button onClick={() => fetchByKeyword()} />
-      </div>
-      <div>
-        {!!filmData?.Error ? (
-          filmData.Error
-        ) : filmData?.totalResults > 5 ? (
-          <InfiniteScroll
-            fetchNextPage={fetchNextPage}
-            getNextStatus={(page) =>
-              !isLoading &&
-              // filmData?.Response === 'True' &&
-              page < filmData?.totalResults
-            }
-          >
-            {filmData?.Search.map(({ Title, Poster }) => {
+      <main className='container'>
+        <div className='d-flex center'>
+          <input
+            placeholder='Search movie here...'
+            data-testid='search-box'
+            onChange={(e) => setKeyword(e.target.value)}
+          ></input>
+          <button data-testid='search-button' onClick={() => fetchByKeyword()}>
+            Search
+          </button>
+        </div>
+        <section>
+          <div>
+            <h2>Search Result</h2>
+          </div>
+          {!!filmData?.Error ? (
+            filmData.Error
+          ) : filmData?.totalResults > 5 ? (
+            <InfiniteScroll
+              fetchNextPage={fetchNextPage}
+              getNextStatus={(page) =>
+                !isLoading &&
+                // filmData?.Response === 'True' &&
+                page < filmData?.totalResults
+              }
+            >
+              {filmData?.Search.map(({ Title, Poster, Type, Year }) => {
+                return (
+                  <ListItem
+                    key={Title}
+                    title={Title}
+                    type={Type}
+                    year={Year}
+                    imgUrl={Poster}
+                  />
+                );
+              })}
+            </InfiniteScroll>
+          ) : (
+            filmData?.Search.map(({ Title, Poster, Type, Year }) => {
               return (
-                <div key={Title}>
-                  <Modal
-                    renderOpener={(open) => (
-                      <img src={Poster} alt={Title} onClick={() => open()} />
-                    )}
-                  >
-                    <img src={Poster} alt={Title} />
-                  </Modal>
-                  <span>{Title}</span>
-                </div>
+                <ListItem
+                  key={Title}
+                  title={Title}
+                  year={Year}
+                  type={Type}
+                  imgUrl={Poster}
+                />
               );
-            })}
-          </InfiniteScroll>
-        ) : (
-          filmData?.Search.map(({ Title, Poster }) => {
-            return (
-              <div key={Title}>
-                <Modal
-                  renderOpener={(open) => (
-                    <img src={Poster} alt={Title} onClick={() => open()} />
-                  )}
-                >
-                  <img src={Poster} alt={Title} />
-                </Modal>
-
-                <span>{Title}</span>
-              </div>
-            );
-          })
-        )}
-      </div>
+            })
+          )}
+        </section>
+      </main>
     </div>
   );
 }
+
+export const ListItem = ({ title, imgUrl, year, type }) => {
+  return (
+    <article>
+      <div
+        style={{
+          padding: 24,
+          borderRadius: 8,
+          border: '1px solid #e3e3e3',
+          marginBottom: 16,
+        }}
+        className='d-flex'
+      >
+        <Modal
+          renderOpener={(open) => (
+            <img
+              src={imgUrl}
+              alt={title}
+              onClick={() => open()}
+              style={{ width: 150 }}
+            />
+          )}
+        >
+          <img src={imgUrl} alt={title} />
+        </Modal>
+        <section style={{ marginLeft: 40 }}>
+          <h2>{title}</h2>
+          <p>Type : {type}</p>
+          <p>Year : {year}</p>
+          <div>
+            <button>Show Detail</button>
+          </div>
+        </section>
+      </div>
+    </article>
+  );
+};
 
 export default connect((state) => state)(App);
