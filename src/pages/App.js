@@ -1,20 +1,22 @@
-import { createRef, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
 import { FILM_DATA } from './../redux/reducer/filmReducer';
 import filmApi from '../api/film';
 import './../../src/styles/App.css';
-import useIntersectionObserver from '../hooks/useIntersectionObserver';
+import Modal from '../components/Modal';
+import InfiniteScroll from '../components/InifiniteScroll';
 
 function App({ film, dispatch }) {
   const { filmData } = film ?? {};
-  const [keyword, setKeyword] = useState('');
 
+  // We dont need to pass keyword into redux,
+  // this state mutate in high frequency we need to keep it local to prevent performance problem
+  const [keyword, setKeyword] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchByKeyword = async () => {
     setIsLoading(true);
     const { data } = await filmApi.search({ keyword, page: 1 });
-
     dispatch({ type: FILM_DATA, payload: data });
     setIsLoading(false);
   };
@@ -22,11 +24,9 @@ function App({ film, dispatch }) {
   const fetchNextPage = async (page) => {
     setIsLoading(true);
     const { data } = await filmApi.search({ keyword, page });
-
-    const newSearch = [...filmData.Search, ...data.Search];
     dispatch({
       type: FILM_DATA,
-      payload: { ...filmData, Search: newSearch },
+      payload: { ...filmData, Search: [...filmData.Search, ...data.Search] },
     });
     setIsLoading(false);
   };
@@ -51,7 +51,13 @@ function App({ film, dispatch }) {
             {filmData?.Search.map(({ Title, Poster }) => {
               return (
                 <div key={Title}>
-                  <img src={Poster} alt={Title} />
+                  <Modal
+                    renderOpener={(open) => (
+                      <img src={Poster} alt={Title} onClick={() => open()} />
+                    )}
+                  >
+                    <img src={Poster} alt={Title} />
+                  </Modal>
                   <span>{Title}</span>
                 </div>
               );
@@ -61,7 +67,14 @@ function App({ film, dispatch }) {
           filmData?.Search.map(({ Title, Poster }) => {
             return (
               <div key={Title}>
-                <img src={Poster} alt={Title} />
+                <Modal
+                  renderOpener={(open) => (
+                    <img src={Poster} alt={Title} onClick={() => open()} />
+                  )}
+                >
+                  <img src={Poster} alt={Title} />
+                </Modal>
+
                 <span>{Title}</span>
               </div>
             );
@@ -71,32 +84,5 @@ function App({ film, dispatch }) {
     </div>
   );
 }
-
-const InfiniteScroll = ({ fetchNextPage, getNextStatus, children }) => {
-  const targetRef = createRef();
-
-  const [page, setPage] = useState(1);
-
-  const onIntersect = async () => {
-    await fetchNextPage(page + 1);
-    setPage((page) => page + 1);
-  };
-  useIntersectionObserver({
-    target: targetRef,
-    onIntersect: onIntersect,
-    enabled: getNextStatus(page),
-  });
-
-  return (
-    <div>
-      {children}
-      {children && (
-        <div ref={targetRef} style={{ height: 200 }}>
-          Loading...
-        </div>
-      )}
-    </div>
-  );
-};
 
 export default connect((state) => state)(App);

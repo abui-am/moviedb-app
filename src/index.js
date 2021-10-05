@@ -9,7 +9,9 @@ import store from './redux/store';
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
-      <App />
+      <div id='modal'>
+        <App />
+      </div>
     </React.StrictMode>
   </Provider>,
   document.getElementById('root')
