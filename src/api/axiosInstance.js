@@ -7,7 +7,7 @@ function apiInstance() {
       'Content-Type': 'application/json',
     },
     params: {
-      apikey: 'aecbedaf',
+      apikey: process.env.REACT_APP_OMBAPIKEY,
     },
   });
 }
