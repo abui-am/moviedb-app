@@ -33,6 +33,7 @@ export const FilmDetails = ({ film, dispatch }) => {
   const { goBack } = useHistory();
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const fetchData = async () => {
