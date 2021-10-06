@@ -4,7 +4,7 @@ import ReactSelect from 'react-select/async';
 import { components } from 'react-select';
 import Image from './Image';
 
-const IconOption = (props) => {
+export const IconOption = (props) => {
   const { Option } = components;
   const { Poster, Year, Title } = props.data?.data ?? {};
   return (
@@ -26,7 +26,7 @@ const IconOption = (props) => {
   );
 };
 
-const Menu = (props) => {
+export const Menu = (props) => {
   return (
     <>
       <components.Menu {...props}>
@@ -129,16 +129,19 @@ const SearchMovie = ({ onChange, onSearch, onInputChange, inputValue }) => {
 };
 
 const SearchIcon = (props) => {
-  console.log(props, 'Adsas');
   return (
     <div
-      style={{ padding: 12, marginRight: 12, cursor: 'pointer' }}
+      style={{
+        padding: 12,
+        marginRight: 12,
+        cursor: 'pointer',
+        borderRadius: '50%',
+      }}
       onClick={() => {
-        console.log(props.selectProps.inputValue);
         props.selectProps.onClickSearch(props.selectProps.inputValue);
       }}
       role='button'
-      className='d-flex center hover-highlight-bg:hover'
+      className='d-flex center hover-highlight-bg hover-highlight'
     >
       <svg xmlns='http://www.w3.org/2000/svg' width={24} height={24} {...props}>
         <path d='M9 2C5.146 2 2 5.146 2 9s3.146 7 7 7a6.959 6.959 0 004.574-1.719l.426.426V16l6 6 2-2-6-6h-1.293l-.426-.426A6.959 6.959 0 0016 9c0-3.854-3.146-7-7-7zm0 2c2.773 0 5 2.227 5 5s-2.227 5-5 5-5-2.227-5-5 2.227-5 5-5z' />

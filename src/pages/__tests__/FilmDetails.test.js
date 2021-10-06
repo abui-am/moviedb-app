@@ -1,6 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import { useParams } from 'react-router';
-import filmApi from '../../api/film';
+
 import { FilmDetails } from '../FilmDetails';
 
 jest.mock('../../api/film', () => ({
@@ -69,7 +68,10 @@ describe('FilmDetails', () => {
   it('should display the data', async () => {
     render(<FilmDetails film={{ filmDetails }} dispatch={jest.fn()} />);
 
-    await waitFor(() => expect(screen.getByText(/Batman/)).toBeVisible(), 300);
+    await waitFor(
+      () => expect(screen.getAllByText(/Batman/).length).toBe(2),
+      300
+    );
     expect(screen.getByText('1989')).toBeVisible();
     expect(screen.getByText(/PG-13/)).toBeVisible();
     expect(screen.getByText(/23 Jun 1989/)).toBeVisible();

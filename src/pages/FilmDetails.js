@@ -88,26 +88,26 @@ export const FilmDetails = ({ film, dispatch }) => {
           <section id='info' className='mb-sm'>
             <h5 className='mb-sm'>Information: </h5>
             <div className='grid-2'>
-              <div>Released</div>
-              <div>{Released}</div>
-              <div>Type:</div>
-              <div>{Type}</div>
-              <div>Genre:</div>
-              <div>{Genre}</div>
-              <div>Director:</div>
-              <div>{Director}</div>
-              <div>Writer:</div>
-              <div>{Writer}</div>
-              <div>Actors:</div>
-              <div>{Actors}</div>
-              <div>Language:</div>
-              <div>{Language}</div>
-              <div>Country:</div>
-              <div>{Country}</div>
-              <div>Awards:</div>
-              <div>{Awards}</div>
-              <div>Production:</div>
-              <div>{Production}</div>
+              <div className='mb-sm'>Released</div>
+              <div className='mb-sm'>{Released}</div>
+              <div className='mb-sm'>Type:</div>
+              <div className='mb-sm'>{Type}</div>
+              <div className='mb-sm'>Genre:</div>
+              <div className='mb-sm'>{Genre}</div>
+              <div className='mb-sm'>Director:</div>
+              <div className='mb-sm'>{Director}</div>
+              <div className='mb-sm'>Writer:</div>
+              <div className='mb-sm'>{Writer}</div>
+              <div className='mb-sm'>Actors:</div>
+              <div className='mb-sm'>{Actors}</div>
+              <div className='mb-sm'>Language:</div>
+              <div className='mb-sm'>{Language}</div>
+              <div className='mb-sm'>Country:</div>
+              <div className='mb-sm'>{Country}</div>
+              <div className='mb-sm'>Awards:</div>
+              <div className='mb-sm'>{Awards}</div>
+              <div className='mb-sm'>Production:</div>
+              <div className='mb-sm'>{Production}</div>
             </div>
           </section>
           <section id='rating' className='mb-sm'>

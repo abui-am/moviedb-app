@@ -1,6 +1,5 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useHistory } from 'react-router';
-import filmApi from '../../api/film';
 import { App, ListItem, MemoizedList } from './../App';
 
 jest.mock('../../api/film', () => ({
@@ -14,18 +13,6 @@ describe('App Component', () => {
     render(<App />);
     const linkElement = screen.getByText(/Search Result/i);
     expect(linkElement).toBeInTheDocument();
-  });
-
-  it('can search', () => {
-    const dispatch = jest.fn();
-    render(<App dispatch={dispatch} film={{ keyword: 'test' }} />);
-    const box = screen.getByTestId('search-box');
-    fireEvent.change(box, { target: { value: 'test' } });
-    expect(dispatch).toBeCalledWith({ payload: 'test', type: 'KEYWORD' });
-    const button = screen.getByTestId('search-button');
-    fireEvent.click(button);
-
-    expect(filmApi.search).toBeCalledWith({ keyword: 'test', page: 1 });
   });
 
   it('render infinite scroll when having 5+ data', () => {
@@ -190,26 +177,30 @@ describe('MemoizedList', () => {
 });
 
 describe('ListItem', () => {
-  it('should render given title, type, year, and image', () => {
+  it('should render given title, type, year, and image', async () => {
     render(
       <ListItem
         type={'Movie'}
         title={'React Testing In Nutshell'}
         year={'2021'}
-        imgUrl={'https://somewhere.com'}
+        imgUrl={
+          'https://m.media-amazon.com/images/M/MV5BMTkwMjM4MTcwOF5BMl5BanBnXkFtZTgwOTMyMTM2MTE@._V1_SX300.jpg'
+        }
       />
     );
 
     expect(screen.getByText(/Movie/)).toBeVisible();
     expect(screen.getByText(/React Testing In Nutshell/)).toBeVisible();
     expect(screen.getByText(/2021/)).toBeVisible();
-    expect(screen.getByAltText('React Testing In Nutshell')).toHaveAttribute(
-      'src',
-      'https://somewhere.com'
+    await waitFor(() =>
+      expect(screen.getByAltText('React Testing In Nutshell')).toHaveAttribute(
+        'src',
+        'https://m.media-amazon.com/images/M/MV5BMTkwMjM4MTcwOF5BMl5BanBnXkFtZTgwOTMyMTM2MTE@._V1_SX300.jpg'
+      )
     );
-  });
+  }, 4000);
 
-  it('Show Movie Poster in a popup modal window when image from the list is clicked', () => {
+  it('Show Movie Poster in a popup modal window when image from the list is clicked', async () => {
     render(
       <>
         <div id='modal'></div>
@@ -217,12 +208,16 @@ describe('ListItem', () => {
           type={'Movie'}
           title={'React Testing In Nutshell'}
           year={'2021'}
-          imgUrl={'https://somewhere.com'}
+          imgUrl={
+            'https://m.media-amazon.com/images/M/MV5BMTkwMjM4MTcwOF5BMl5BanBnXkFtZTgwOTMyMTM2MTE@._V1_SX300.jpg'
+          }
         />
       </>
     );
 
-    fireEvent.click(screen.getByAltText('React Testing In Nutshell'));
+    await waitFor(() =>
+      fireEvent.click(screen.getByAltText('React Testing In Nutshell'))
+    );
     expect(
       screen.getByAltText(`Modal React Testing In Nutshell`)
     ).toBeVisible();
@@ -240,7 +235,9 @@ describe('ListItem', () => {
           type={'Movie'}
           title={'React Testing In Nutshell'}
           year={'2021'}
-          imgUrl={'https://somewhere.com'}
+          imgUrl={
+            'https://m.media-amazon.com/images/M/MV5BMTkwMjM4MTcwOF5BMl5BanBnXkFtZTgwOTMyMTM2MTE@._V1_SX300.jpg'
+          }
           id={'tt0096895'}
         />
       </>

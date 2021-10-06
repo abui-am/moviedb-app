@@ -234,6 +234,12 @@ button:hover {
   border-bottom: 1px solid var(--gray-color);
 }
 
+.nav {
+  display: flex;
+  padding: 16px 0px;
+  border-bottom: 1px solid var(--primary-color);
+}
+
 .hover-highlight:hover {
   color: var(--primary-color);
 }

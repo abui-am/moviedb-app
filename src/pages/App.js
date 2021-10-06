@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { FILM_DATA, KEYWORD } from './../redux/reducer/filmReducer';
 import filmApi from '../api/film';
-import './../../src/styles/App.css';
 import Modal from '../components/Modal';
 import InfiniteScroll from '../components/InfiniteScroll';
 import { useHistory } from 'react-router';
@@ -39,26 +38,42 @@ export function App({ film, dispatch }) {
 
   return (
     <BasicLayout>
-      <section id='search' className='d-flex center mb-sm'>
-        <SearchMovie
-          onInputChange={(e, action) => {
-            if (
-              action.action !== 'set-value' &&
-              action.action !== 'menu-close' &&
-              action.action !== 'input-blur'
-            ) {
-              dispatch({ type: KEYWORD, payload: e });
-            }
-          }}
-          inputValue={keyword}
-          onChange={(select) => {
-            history.push('/film/' + select?.value);
-          }}
-          onSearch={(data, keyword) => {
-            dispatch({ type: KEYWORD, payload: keyword });
-            dispatch({ type: FILM_DATA, payload: data });
-          }}
-        />
+      <div
+        style={{
+          height: 500,
+          position: 'absolute',
+          width: '100%',
+          zIndex: -1,
+          left: 0,
+          top: 0,
+          backgroundColor: 'var(--background-secondary)',
+        }}
+      />
+      <div className='d-flex mb-md center'>
+        <h3 className='mb-sm'>Search Movie</h3>
+      </div>
+      <section id='search' className='d-flex center mb-md'>
+        <div className='mb-sm' style={{ width: '100%' }}>
+          <SearchMovie
+            onInputChange={(e, action) => {
+              if (
+                action.action !== 'set-value' &&
+                action.action !== 'menu-close' &&
+                action.action !== 'input-blur'
+              ) {
+                dispatch({ type: KEYWORD, payload: e });
+              }
+            }}
+            inputValue={keyword}
+            onChange={(select) => {
+              history.push('/film/' + select?.value);
+            }}
+            onSearch={(data, keyword) => {
+              dispatch({ type: KEYWORD, payload: keyword });
+              dispatch({ type: FILM_DATA, payload: data });
+            }}
+          />
+        </div>
       </section>
       <div className='mb-md'>
         <div className='divider mb-md' />
@@ -145,6 +160,7 @@ export const ListItem = ({ title, imgUrl, year, type, id }) => {
           borderRadius: 8,
           border: '1px solid #e3e3e3',
           marginBottom: 16,
+          backgroundColor: 'white',
         }}
         className='d-flex'
       >
