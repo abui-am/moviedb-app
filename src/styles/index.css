@@ -218,6 +218,7 @@ button {
   font-weight: bold;
   min-width: 120px;
   text-align: center;
+  cursor: pointer;
 }
 button:hover {
   box-shadow: var(--button-shadow-hover);
@@ -231,4 +232,12 @@ button:hover {
 
 .divider {
   border-bottom: 1px solid var(--gray-color);
+}
+
+.hover-highlight:hover {
+  color: var(--primary-color);
+}
+
+.hover-highlight-bg:hover {
+  background: var(--background-secondary);
 }

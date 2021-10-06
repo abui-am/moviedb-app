@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useParams } from 'react-router';
 import filmApi from '../api/film';
+import Image from '../components/Image';
 import BasicLayout from '../layouts/BasicLayout';
 import { FILM_DETAILS } from '../redux/reducer/filmReducer';
 
@@ -56,15 +57,18 @@ export const FilmDetails = ({ film, dispatch }) => {
 
   return (
     <BasicLayout>
-      <div className='mb-md'>
+      <div className='mb-md d-flex'>
         <button onClick={() => goBack()}>Back</button>
+        <h6 className='ml-lg' style={{ alignSelf: 'center' }}>
+          Film / Details / {Title}
+        </h6>
       </div>
       <div className='mb-md'>
         <div className='divider mb-md' />
       </div>
       <div className='d-flex'>
         <div>
-          <img src={Poster} style={{ maxWidth: 300 }} alt={Title} />
+          <Image src={Poster} style={{ maxWidth: 300 }} alt={Title} />
         </div>
 
         <section id='info' style={{ marginLeft: 40 }}>

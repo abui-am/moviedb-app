@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { FILM_DATA, KEYWORD } from './../redux/reducer/filmReducer';
 import filmApi from '../api/film';
@@ -7,25 +7,22 @@ import Modal from '../components/Modal';
 import InfiniteScroll from '../components/InfiniteScroll';
 import { useHistory } from 'react-router';
 import BasicLayout from '../layouts/BasicLayout';
+import SearchMovie from '../components/SearchMovie';
+import Image from '../components/Image';
 
 export function App({ film, dispatch }) {
   const { filmData, keyword } = film ?? {};
-
   const [isLoading, setIsLoading] = useState(false);
-
-  const fetchByKeyword = async () => {
-    setIsLoading(true);
-    const { data } = await filmApi.search({ keyword, page: 1 });
-    dispatch({ type: FILM_DATA, payload: data });
-    setIsLoading(false);
-  };
 
   const fetchNextPage = async (page) => {
     setIsLoading(true);
     const { data } = await filmApi.search({ keyword, page });
     dispatch({
       type: FILM_DATA,
-      payload: { ...filmData, Search: [...filmData.Search, ...data.Search] },
+      payload: {
+        ...filmData,
+        Search: [...filmData.Search, ...(data?.Search ?? [])],
+      },
     });
     setIsLoading(false);
   };
@@ -38,33 +35,30 @@ export function App({ film, dispatch }) {
     );
   };
 
-  const keyHandler = (event) => {
-    switch (event.key) {
-      case 'Enter':
-        fetchByKeyword();
-        break;
-      default:
-    }
-  };
+  const history = useHistory();
 
   return (
     <BasicLayout>
       <section id='search' className='d-flex center mb-sm'>
-        <input
-          placeholder='Search movie here...'
-          data-testid='search-box'
-          style={{ width: '100%' }}
-          onChange={(e) => dispatch({ type: KEYWORD, payload: e.target.value })}
-          onKeyUp={(e) => keyHandler(e)}
-        ></input>
-        <button
-          className='ml-sm'
-          data-testid='search-button'
-          onClick={() => fetchByKeyword()}
-          value={keyword}
-        >
-          Search
-        </button>
+        <SearchMovie
+          onInputChange={(e, action) => {
+            if (
+              action.action !== 'set-value' &&
+              action.action !== 'menu-close' &&
+              action.action !== 'input-blur'
+            ) {
+              dispatch({ type: KEYWORD, payload: e });
+            }
+          }}
+          inputValue={keyword}
+          onChange={(select) => {
+            history.push('/film/' + select?.value);
+          }}
+          onSearch={(data, keyword) => {
+            dispatch({ type: KEYWORD, payload: keyword });
+            dispatch({ type: FILM_DATA, payload: data });
+          }}
+        />
       </section>
       <div className='mb-md'>
         <div className='divider mb-md' />
@@ -75,7 +69,9 @@ export function App({ film, dispatch }) {
           style={{ justifyContent: 'space-between' }}
         >
           <h5>Search Result</h5>
-          <span>{filmData?.totalResults ?? 0} result found</span>
+          <span>
+            {filmData?.totalResults ?? 0} result found for "{keyword}"
+          </span>
         </div>
         <MemoizedList
           filmData={filmData}
@@ -154,7 +150,7 @@ export const ListItem = ({ title, imgUrl, year, type, id }) => {
       >
         <Modal
           renderOpener={(open) => (
-            <img
+            <Image
               src={imgUrl}
               alt={title}
               onClick={() => open()}
@@ -168,7 +164,7 @@ export const ListItem = ({ title, imgUrl, year, type, id }) => {
               maxWidth: 568,
             }}
           ></div>
-          <img width='100%' src={imgUrl} alt={`Modal ${title}`} />
+          <Image width='100%' src={imgUrl} alt={`Modal ${title}`} />
         </Modal>
         <section className='ml-lg'>
           <h5 className='mb-sm'>{title}</h5>
