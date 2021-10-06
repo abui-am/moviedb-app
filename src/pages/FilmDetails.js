@@ -25,9 +25,10 @@ export const FilmDetails = ({ film, dispatch }) => {
     Awards,
     Production,
     BoxOffice,
+    Released,
   } = filmDetails;
   const { id } = useParams();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const { goBack } = useHistory();
   useEffect(() => {
     fetchData();
@@ -43,6 +44,12 @@ export const FilmDetails = ({ film, dispatch }) => {
   if (isLoading)
     return (
       <BasicLayout>
+        <div className='mb-md'>
+          <button onClick={() => goBack()}>Back</button>
+        </div>
+        <div className='mb-md'>
+          <div className='divider mb-md' />
+        </div>
         <div>Loading...</div>
       </BasicLayout>
     );
@@ -76,13 +83,9 @@ export const FilmDetails = ({ film, dispatch }) => {
           </div>
           <section id='info' className='mb-sm'>
             <h5 className='mb-sm'>Information: </h5>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, auto)',
-                gridGap: 8,
-              }}
-            >
+            <div className='grid-2'>
+              <div>Released</div>
+              <div>{Released}</div>
               <div>Type:</div>
               <div>{Type}</div>
               <div>Genre:</div>
@@ -108,7 +111,10 @@ export const FilmDetails = ({ film, dispatch }) => {
             <div className='-ml-sm d-flex wrap'>
               {Ratings.map(({ Source, Value }) => {
                 return (
-                  <div className='d-flex col center border padding-md ml-sm'>
+                  <div
+                    key={Source}
+                    className='d-flex col center border padding-md ml-sm'
+                  >
                     <span>{Source}</span>
                     <h4>{Value}</h4>
                   </div>
@@ -118,13 +124,7 @@ export const FilmDetails = ({ film, dispatch }) => {
           </section>
           <section id='gross'>
             <h5 className='mb-sm'>Gross: </h5>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, auto)',
-                gridGap: 8,
-              }}
-            >
+            <div className='grid-2'>
               <div>Box Office:</div>
               <div>{BoxOffice ?? 'N/A'}</div>
             </div>

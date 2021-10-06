@@ -70,8 +70,12 @@ export function App({ film, dispatch }) {
         <div className='divider mb-md' />
       </div>
       <section id='list'>
-        <div className='mb-md'>
+        <div
+          className='mb-md d-flex'
+          style={{ justifyContent: 'space-between' }}
+        >
           <h5>Search Result</h5>
+          <span>{filmData?.totalResults ?? 0} result found</span>
         </div>
         <MemoizedList
           filmData={filmData}
@@ -158,7 +162,13 @@ export const ListItem = ({ title, imgUrl, year, type, id }) => {
             />
           )}
         >
-          <img src={imgUrl} alt={`Modal ${title}`} />
+          <div
+            style={{
+              width: '100vw',
+              maxWidth: 568,
+            }}
+          ></div>
+          <img width='100%' src={imgUrl} alt={`Modal ${title}`} />
         </Modal>
         <section className='ml-lg'>
           <h5 className='mb-sm'>{title}</h5>
