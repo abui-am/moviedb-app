@@ -1,4 +1,6 @@
+export const FILM_DETAILS = 'FILM_DETAILS';
 export const FILM_DATA = 'FILM_DATA';
+export const KEYWORD = 'KEYWORD';
 
 const INITIAL_STATE = {
   filmData: {
@@ -6,6 +8,8 @@ const INITIAL_STATE = {
     totalResults: 0,
     Response: 'true',
   },
+  keyword: '',
+  filmDetails: {},
 };
 
 const filmReducer = (state = INITIAL_STATE, action) => {
@@ -14,6 +18,18 @@ const filmReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         filmData: action.payload,
+      };
+
+    case KEYWORD:
+      return {
+        ...state,
+        keyword: action.payload,
+      };
+
+    case FILM_DETAILS:
+      return {
+        ...state,
+        filmDetails: action.payload,
       };
 
     default:

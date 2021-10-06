@@ -9,6 +9,13 @@ const filmApi = {
       },
     });
   },
+  getById: (id) => {
+    return apiInstance().get('', {
+      params: {
+        i: id,
+      },
+    });
+  },
 };
 
 export default filmApi;

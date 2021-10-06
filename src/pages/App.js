@@ -1,18 +1,17 @@
-import { useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
-import { FILM_DATA } from './../redux/reducer/filmReducer';
+import { FILM_DATA, KEYWORD } from './../redux/reducer/filmReducer';
 import filmApi from '../api/film';
 import './../../src/styles/App.css';
 import Modal from '../components/Modal';
 import InfiniteScroll from '../components/InfiniteScroll';
+import { useHistory } from 'react-router';
+import BasicLayout from '../layouts/BasicLayout';
 
 export function App({ film, dispatch }) {
-  const { filmData } = film ?? {};
+  const { filmData, keyword } = film ?? {};
 
-  // We dont need to pass keyword into redux,
-  // this state mutate in high frequency we need to keep it local to prevent performance problem
-  const [keyword, setKeyword] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchByKeyword = async () => {
     setIsLoading(true);
@@ -30,66 +29,114 @@ export function App({ film, dispatch }) {
     });
     setIsLoading(false);
   };
+
+  const getNextStatus = (page) => {
+    return (
+      !isLoading &&
+      // filmData?.Response === 'True' &&
+      page * 10 < filmData?.totalResults
+    );
+  };
+
+  const keyHandler = (event) => {
+    switch (event.key) {
+      case 'Enter':
+        fetchByKeyword();
+        break;
+      default:
+    }
+  };
+
   return (
-    <div className='App'>
-      <main className='container'>
-        <div className='d-flex center'>
-          <input
-            placeholder='Search movie here...'
-            data-testid='search-box'
-            onChange={(e) => setKeyword(e.target.value)}
-          ></input>
-          <button data-testid='search-button' onClick={() => fetchByKeyword()}>
-            Search
-          </button>
+    <BasicLayout>
+      <section id='search' className='d-flex center mb-sm'>
+        <input
+          placeholder='Search movie here...'
+          data-testid='search-box'
+          style={{ width: '100%' }}
+          onChange={(e) => dispatch({ type: KEYWORD, payload: e.target.value })}
+          onKeyUp={(e) => keyHandler(e)}
+        ></input>
+        <button
+          className='ml-sm'
+          data-testid='search-button'
+          onClick={() => fetchByKeyword()}
+          value={keyword}
+        >
+          Search
+        </button>
+      </section>
+      <div className='mb-md'>
+        <div className='divider mb-md' />
+      </div>
+      <section id='list'>
+        <div className='mb-md'>
+          <h5>Search Result</h5>
         </div>
-        <section>
-          <div>
-            <h2>Search Result</h2>
-          </div>
-          {!!filmData?.Error ? (
-            filmData.Error
-          ) : filmData?.totalResults > 5 ? (
-            <InfiniteScroll
-              fetchNextPage={fetchNextPage}
-              getNextStatus={(page) =>
-                !isLoading &&
-                // filmData?.Response === 'True' &&
-                page < filmData?.totalResults
-              }
-            >
-              {filmData?.Search.map(({ Title, Poster, Type, Year }) => {
-                return (
-                  <ListItem
-                    key={Title}
-                    title={Title}
-                    type={Type}
-                    year={Year}
-                    imgUrl={Poster}
-                  />
-                );
-              })}
-            </InfiniteScroll>
-          ) : (
-            filmData?.Search.map(({ Title, Poster, Type, Year }) => {
-              return (
-                <ListItem
-                  key={Title}
-                  title={Title}
-                  year={Year}
-                  type={Type}
-                  imgUrl={Poster}
-                />
-              );
-            })
-          )}
-        </section>
-      </main>
-    </div>
+        <MemoizedList
+          filmData={filmData}
+          getNextStatus={getNextStatus}
+          fetchNextPage={fetchNextPage}
+          isLoading={isLoading}
+        />
+      </section>
+    </BasicLayout>
   );
 }
 
-export const ListItem = ({ title, imgUrl, year, type }) => {
+export const MemoizedList = ({
+  filmData = {},
+  getNextStatus,
+  fetchNextPage,
+  isLoading,
+}) => {
+  const { Search = [], Error: err, totalResults } = filmData ?? {};
+  return useMemo(() => {
+    if (isLoading && Search.length === 0) return <div>Loading...</div>;
+
+    if (!!err) return <div>{err}</div>;
+    return (
+      <>
+        {totalResults > 5 ? (
+          <InfiniteScroll
+            fetchNextPage={fetchNextPage}
+            getNextStatus={getNextStatus}
+          >
+            {Search?.map(({ Title, Poster, Type, Year, imdbID }) => {
+              return (
+                <ListItem
+                  id={imdbID}
+                  key={imdbID}
+                  title={Title}
+                  type={Type}
+                  year={Year}
+                  imgUrl={Poster}
+                />
+              );
+            }) ?? <div />}
+          </InfiniteScroll>
+        ) : (
+          Search?.map(({ Title, Poster, Type, Year, imdbID }) => {
+            return (
+              <ListItem
+                id={imdbID}
+                key={imdbID}
+                title={Title}
+                year={Year}
+                type={Type}
+                imgUrl={Poster}
+              />
+            );
+          }) ?? <div />
+        )}
+      </>
+    );
+  }, [isLoading, filmData]);
+};
+
+export const ListItem = ({ title, imgUrl, year, type, id }) => {
+  const history = useHistory();
+
   return (
     <article>
       <div
@@ -111,14 +158,16 @@ export const ListItem = ({ title, imgUrl, year, type }) => {
             />
           )}
         >
-          <img src={imgUrl} alt={title} />
+          <img src={imgUrl} alt={`Modal ${title}`} />
         </Modal>
-        <section style={{ marginLeft: 40 }}>
-          <h2>{title}</h2>
-          <p>Type : {type}</p>
-          <p>Year : {year}</p>
+        <section className='ml-lg'>
+          <h5 className='mb-sm'>{title}</h5>
+          <p className='mb-sm'>Type : {type}</p>
+          <p className='mb-sm'>Year : {year}</p>
           <div>
-            <button>Show Detail</button>
+            <button onClick={() => history.push(`/film/${id}`)}>
+              Show Details
+            </button>
           </div>
         </section>
       </div>

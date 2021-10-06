@@ -7,6 +7,68 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+h1 {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 96px;
+  line-height: 58px;
+  color: var(--text-primary);
+}
+
+h2 {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 64px;
+  line-height: 58px;
+  color: var(--text-primary);
+}
+
+h3 {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 48px;
+  line-height: 58px;
+  color: var(--text-primary);
+}
+
+h4 {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 36px;
+  line-height: 43px;
+  color: var(--text-primary);
+}
+
+h5 {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 29px;
+  color: var(--text-primary);
+}
+
+h6 {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 28px;
+  color: var(--text-primary);
+}
+
+body {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
 :root {
   --primary-color: #5357c5;
   --secondary-color: #9ca0ff;
@@ -38,15 +100,54 @@ body {
   display: flex;
   justify-content: center;
   width: 100%;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 
 .d-flex {
   display: flex;
 }
 
+.d-flex.col {
+  flex-direction: column;
+}
+
+.d-flex.wrap {
+  flex-wrap: wrap;
+}
+
+.padding-md {
+  padding: 24px;
+}
+
+.mb-sm {
+  margin-bottom: 16px;
+}
+
+.mb-md {
+  margin-bottom: 24px;
+}
+
+.ml-sm {
+  margin-left: 16px;
+}
+
+.-ml-sm {
+  margin-left: -16px;
+}
+
+.ml-lg {
+  margin-left: 40px;
+}
+
 .center {
   align-items: center;
   justify-content: center;
+}
+
+.border {
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
 }
 
 .backdrop {
@@ -89,7 +190,7 @@ input {
   border: 0px;
   display: flex;
   width: 100%;
-  max-width: 367px;
+  /* max-width: 367px; */
   position: relative;
 }
 
@@ -112,6 +213,7 @@ button {
   text-align: left;
   color: #f8f8f8;
   font-weight: bold;
+  min-width: 120px;
   text-align: center;
 }
 button:hover {
@@ -122,4 +224,8 @@ button:hover {
   max-width: 1024px;
   width: 100vw;
   padding: 24px;
+}
+
+.divider {
+  border-bottom: 1px solid var(--gray-color);
 }

@@ -5,13 +5,22 @@ import App from './pages/App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './redux/store';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import FilmDetails from './pages/FilmDetails';
 
 ReactDOM.render(
   <Provider store={store}>
     <React.StrictMode>
       <BrowserRouter>
-        <App />
+        <Switch>
+          <Route path='/' exact>
+            <App />
+          </Route>
+
+          <Route path='/film/:id' exact>
+            <FilmDetails />
+          </Route>
+        </Switch>
 
         <div id='modal'></div>
       </BrowserRouter>

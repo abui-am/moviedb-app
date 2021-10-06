@@ -19,12 +19,14 @@ describe('InfiniteScroll', () => {
   });
 
   it('should not render loading when children isnt present', () => {
-    render(<InfiniteScroll />);
+    render(<InfiniteScroll getNextStatus={() => true} />);
     expect(screen.queryAllByText('Loading...').length).toBe(0);
   });
 
   it('should  render loading when children present', () => {
-    render(<InfiniteScroll>Something here</InfiniteScroll>);
+    render(
+      <InfiniteScroll getNextStatus={() => true}>Something here</InfiniteScroll>
+    );
     expect(screen.getByText('Loading...')).toBeVisible();
   });
 });

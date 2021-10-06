@@ -7,6 +7,7 @@ const InfiniteScroll = ({ fetchNextPage, getNextStatus, children }) => {
   const targetRef = createRef();
 
   const [page, setPage] = useState(1);
+  const enabled = getNextStatus?.(page);
 
   const onIntersect = async () => {
     await fetchNextPage(page + 1);
@@ -15,16 +16,16 @@ const InfiniteScroll = ({ fetchNextPage, getNextStatus, children }) => {
   useIntersectionObserver({
     target: targetRef,
     onIntersect: onIntersect,
-    enabled: getNextStatus?.(page),
+    enabled,
   });
 
   return (
-    <div>
+    <div data-testid='infinite-scroll'>
       {children}
       {
         // This was intentional,
         // We need to render Loding indicator after our children to prevent double fetch on initialFetching
-        children && (
+        children && enabled && (
           <div ref={targetRef} style={{ height: 200 }}>
             Loading...
           </div>

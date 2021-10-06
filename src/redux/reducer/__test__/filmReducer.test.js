@@ -8,6 +8,8 @@ describe('filmReducer', () => {
         totalResults: 0,
         Response: 'true',
       },
+      filmDetails: {},
+      keyword: '',
     });
   });
 
